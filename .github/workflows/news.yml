@@ -1,5 +1,6 @@
 name: Daily News Digest
-
+permissions:
+  contents: write
 on:
   schedule:
     - cron: "0 2 * * *"   # 每天 UTC 02:00 运行（北京时间 10:00）
