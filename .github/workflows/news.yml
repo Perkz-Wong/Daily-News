@@ -1,0 +1,33 @@
+name: Daily News Digest
+
+on:
+  schedule:
+    - cron: "0 12 * * *"   # 每天 UTC 12:00 运行（北京时间 20:00）
+  workflow_dispatch:       # 允许手动运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install feedparser requests
+
+      - name: Generate Daily News
+        run: python generate_news.py
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add news/daily_news.html
+          git commit -m "Update daily news"
+          git push
