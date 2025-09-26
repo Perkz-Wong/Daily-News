@@ -2,7 +2,7 @@ name: Daily News Digest
 
 on:
   schedule:
-    - cron: "0 12 * * *"   # 每天 UTC 12:00 运行（北京时间 20:00）
+    - cron: "0 2 * * *"   # 每天 UTC 02:00 运行（北京时间 10:00）
   workflow_dispatch:       # 允许手动运行
 
 jobs:
@@ -28,6 +28,6 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add news/daily_news.html
-          git commit -m "Update daily news"
+          git add news/*
+          git commit -m "Update daily news" || echo "No changes to commit"
           git push
