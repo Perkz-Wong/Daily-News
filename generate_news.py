@@ -85,6 +85,7 @@ def main():
             title = entry.get("title", "").strip()
             link = entry.get("link", "").strip()
             title = safe_get(entry, 'title')
+            link = safe_get(entry, 'link')
             summary = safe_get(entry, 'summary')
             # published -> try to get published_parsed
             published_dt = None
