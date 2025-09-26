@@ -84,7 +84,8 @@ def main():
         for entry in entries[:6]:
             title = entry.get("title", "").strip()
             link = entry.get("link", "").strip()
-            summary = safe_get(entry)
+            title = safe_get(entry, 'title')
+            summary = safe_get(entry, 'summary')
             # published -> try to get published_parsed
             published_dt = None
             if "published_parsed" in entry and entry.published_parsed:
