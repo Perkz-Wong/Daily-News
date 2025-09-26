@@ -82,11 +82,9 @@ def main():
         entries = getattr(feed, "entries", []) or []
         # 取每源前 6 条（避免抓太多）
         for entry in entries[:6]:
-            title = entry.get("title", "").strip()
-            link = entry.get("link", "").strip()
-            title = safe_get(entry, 'title')
-            link = safe_get(entry, 'link')
-            summary = safe_get(entry, 'summary')
+            title = safe_get(entry, "title")
+            link = safe_get(entry, "link")
+            summary = safe_get(entry, "summary")
             # published -> try to get published_parsed
             published_dt = None
             if "published_parsed" in entry and entry.published_parsed:
