@@ -1,39 +1,45 @@
 import feedparser
 import datetime
 
-# 新闻 RSS 源
-sources = {
-    "Reuters": "http://feeds.reuters.com/reuters/worldNews",
-    "AFP": "https://www.afp.com/en/rss",
-    "BBC": "http://feeds.bbci.co.uk/news/world/rss.xml",
-    "Guardian": "https://www.theguardian.com/world/rss",
-    "FoxNews": "http://feeds.foxnews.com/foxnews/world",
-    "Independent": "https://www.independent.co.uk/news/world/rss"
-}
+# 定义 RSS 源
+rss_feeds = [
+    "https://www.reuters.com/rssFeed/worldNews",
+    "http://feeds.bbci.co.uk/news/world/rss.xml",
+    "https://www.theguardian.com/world/rss",
+    "https://www.france24.com/en/rss",
+    "https://feeds.foxnews.com/foxnews/world",
+    "https://www.independent.co.uk/news/world/rss"
+]
 
-news_items = []
+articles = []
 
-# 抓取新闻
-for source, url in sources.items():
-    feed = feedparser.parse(url)
-    for entry in feed.entries[:5]:  # 每个源先取5条
-        news_items.append({
+# 解析 RSS
+for feed in rss_feeds:
+    d = feedparser.parse(feed)
+    for entry in d.entries[:5]:  # 每个源取前 5 条
+        articles.append({
             "title": entry.title,
             "link": entry.link,
-            "summary": getattr(entry, "summary", ""),
-            "source": source
+            "summary": getattr(entry, "summary", "No summary available.")
         })
 
-# 只保留 10 条新闻
-news_items = news_items[:10]
+# 获取今天日期 (UTC)
+today = datetime.datetime.utcnow().strftime("%Y%m%d")
 
-# 格式化成 HTML
-today = datetime.date.today().strftime("%Y-%m-%d")
-html_content = f"<h1>Daily International News ({today})</h1><ul>"
-for item in news_items:
-    html_content += f"<li><b>{item['source']}</b>: <a href='{item['link']}'>{item['title']}</a><br>{item['summary']}</li><br>"
-html_content += "</ul>"
+# 生成文件名，带日期
+output_file = f"news/daily_news_{today}.html"
+
+# 生成 HTML
+html_content = "<html><head><meta charset='utf-8'><title>Daily News</title></head><body>"
+html_content += f"<h1>Daily News Digest - {today}</h1><ul>"
+
+for a in articles:
+    html_content += f"<li><a href='{a['link']}' target='_blank'>{a['title']}</a><br>{a['summary']}</li><br>"
+
+html_content += "</ul></body></html>"
 
 # 写入文件
-with open("news/daily_news.html", "w", encoding="utf-8") as f:
+with open(output_file, "w", encoding="utf-8") as f:
     f.write(html_content)
+
+print(f"✅ Saved: {output_file}")
